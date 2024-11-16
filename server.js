@@ -33,7 +33,6 @@ app.use(session({
   }
 }))
 
-
 // routes
 app.use('/api/users', usersRouter);
 app.use('/api/products', productsRouter);
