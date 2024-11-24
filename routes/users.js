@@ -9,7 +9,7 @@ router.post('/signup', async (req, res) => {
     // get user inputs
     const { email, password, firstName, lastName } = req.body;
 
-    // validate user inputs (to-do: validate email, enforce password policy)
+    // validate inputs
     if (!email || !password || !firstName || !lastName) {
         return res.status(400).send('Missing required fields');
     }
@@ -17,7 +17,7 @@ router.post('/signup', async (req, res) => {
     // validate the password
     const passwordErrors = validatePassword(password);
     if (passwordErrors.length > 0) {
-        return res.status(400).json({ message: 'Password requires 8 characters, at least 1 digit, 1 uppercase, and 1 lowercase character', errors: passwordErrors });
+        return res.status(400).json({ message: 'Password requires 8 characters, at least 1 digit, 1 uppercase character, and 1 lowercase character', errors: passwordErrors });
     }
 
     // check if user already exists
