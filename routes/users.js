@@ -13,6 +13,13 @@ router.post('/signup', async (req, res) => {
     if (!email || !password || !firstName || !lastName) {
         return res.status(400).send('Missing required fields');
     }
+
+    // validate the password
+    const passwordErrors = validatePassword(password);
+    if (passwordErrors.length > 0) {
+        return res.status(400).json({ message: 'Password requires 8 characters, at least 1 digit, 1 uppercase, and 1 lowercase character', errors: passwordErrors });
+    }
+
     // check if user already exists
     const existingUser = await Prisma.user.findUnique({
         where: {
