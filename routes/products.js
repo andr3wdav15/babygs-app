@@ -25,7 +25,7 @@ router.get('/:id', async (req, res) => {
 
   const product = await prisma.product.findUnique({ // find the product by id
     where: {
-      id: parseInt(id)
+      product_id: parseInt(id)
     }
   });
 
