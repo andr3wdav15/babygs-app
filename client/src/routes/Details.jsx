@@ -32,16 +32,13 @@ export default function Details() {
   const handleAddToCart = () => {
     let currentCart = Array.isArray(cookies.cart) ? cookies.cart : [];
 
-    // Check if item already exists in cart
     const existingItemIndex = currentCart.findIndex(
       (item) => item.id === product.product_id
     );
 
     if (existingItemIndex !== -1) {
-      // If item exists, increase quantity
       currentCart[existingItemIndex].quantity += 1;
     } else {
-      // If item doesn't exist, add it with quantity 1
       const newItem = {
         id: product.product_id,
         name: product.name,
