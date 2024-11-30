@@ -8,7 +8,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 export default function Details() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [products, setProducts] = useState([]);
   const [cookies, setCookie] = useCookies(["cart"]);
   const apiUrl = import.meta.env.VITE_API_URL;
   const imageUrl = import.meta.env.VITE_IMAGE_URL;
@@ -16,28 +15,15 @@ export default function Details() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`${apiUrl}/products${id ? `/${id}` : ""}`);
+        const response = await fetch(`${apiUrl}/products/${id}`);
         const data = await response.json();
         setProduct(data);
       } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/products/all`);
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching product:", error);
       }
     };
 
-    if (id) {
-      fetchProduct();
-    } else {
-      fetchProducts();
-    }
+    fetchProduct();
   }, [apiUrl, id]);
 
   const handleAddToCart = () => {
@@ -69,7 +55,7 @@ export default function Details() {
 
   return (
     <div className="container mt-5">
-      {id && product ? (
+      {product ? (
         <>
           <div className="row justify-content-center">
             <div className="col-md-6 text-center">
@@ -108,41 +94,11 @@ export default function Details() {
           </div>
         </>
       ) : (
-        <>
-          <div className="row justify-content-center">
-            <div className="col-md-6">
-              {products.map((product) => (
-                <div key={product.product_id} className="mb-4">
-                  <div className="card">
-                    <div className="card-img-top">
-                      <img
-                        src={`${imageUrl}/${product.image_filename}`}
-                        className="img-fluid mb-4"
-                        alt={product.name}
-                      />
-                    </div>
-                    <div className="card-body">
-                      <h5 className="card-title">{product.name}</h5>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <p className="card-text mb-0">
-                          ${Number(product.cost).toFixed(2)}
-                        </p>
-                        <div>
-                          <Link
-                            to={`/details/${product.product_id}`}
-                            className="btn btn-primary"
-                          >
-                            More Info
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <p>Loading...</p>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
