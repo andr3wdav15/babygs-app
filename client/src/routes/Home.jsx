@@ -24,7 +24,7 @@ export default function Home() {
 
   return (
     <div className="container mt-5">
-            <h1 className="mb-5 text-center">Home</h1>
+      <h1 className="mb-5 text-center">Home</h1>
       <div className="row">
         {products.map((product) => (
           <div className="col-md-4 mb-4" key={product.product_id}>
@@ -38,7 +38,10 @@ export default function Home() {
                 <h5 className="card-title">{product.name}</h5>
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="card-text mb-0">${product.cost}</p>
-                  <Link to={`/details/${product.product_id}`} className="btn btn-primary">
+                  <Link
+                    to={`/details/${product.product_id}`}
+                    className="btn btn-primary"
+                  >
                     More Info
                   </Link>
                 </div>

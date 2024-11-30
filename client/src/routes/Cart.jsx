@@ -36,7 +36,9 @@ export default function Cart() {
     <div className="container mt-5">
       <h2 className="mb-4 text-center">Shopping Cart</h2>
       {cartItems.length === 0 ? (
-        <p className="text-center">Your cart is empty. <Link to="/">Continue shopping</Link></p>
+        <p className="text-center">
+          Your cart is empty. <Link to="/">Continue shopping</Link>
+        </p>
       ) : (
         <div className="row justify-content-center">
           <div className="col-md-6">
@@ -54,7 +56,9 @@ export default function Cart() {
                     <div className="card-body d-flex justify-content-between align-items-center w-100">
                       <div>
                         <h5 className="card-title">{item.name}</h5>
-                        <p className="card-text">Price: ${Number(item.cost).toFixed(2)}</p>
+                        <p className="card-text">
+                          Price: ${Number(item.cost).toFixed(2)}
+                        </p>
                       </div>
                       <div className="d-flex align-items-center">
                         <button
@@ -84,8 +88,12 @@ export default function Cart() {
             ))}
             <div className="d-flex justify-content-end align-items-center mt-4">
               <h5 className="mb-0 me-3">Subtotal: ${subtotal.toFixed(2)}</h5>
-              <Link to="/" className="btn btn-secondary me-3">Continue Shopping</Link>
-              <Link to="/checkout" className="btn btn-primary">Checkout</Link>
+              <Link to="/" className="btn btn-secondary me-3">
+                Continue Shopping
+              </Link>
+              <Link to="/checkout" className="btn btn-primary">
+                Checkout
+              </Link>
             </div>
           </div>
         </div>
