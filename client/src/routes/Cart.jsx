@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function Cart() {
   const [cookies, setCookie] = useCookies(["cart"]);
@@ -31,35 +33,63 @@ export default function Cart() {
   };
 
   return (
-    <>
-      <h2>Shopping Cart</h2>
+    <div className="container mt-5">
+      <h2 className="mb-4 text-center">Shopping Cart</h2>
       {cartItems.length === 0 ? (
-        <p>Your cart is empty</p>
+        <p className="text-center">Your cart is empty. <Link to="/">Continue shopping</Link></p>
       ) : (
-        <>
-          {cartItems.map((item, index) => (
-            <div key={index} className="cart-item">
-              <div className="product-image">
-                <img src={`${imageUrl}/${item.image}`} alt={item.name} />
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            {cartItems.map((item, index) => (
+              <div className="card mb-3" key={index}>
+                <div className="row g-0">
+                  <div className="col-md-4 d-flex align-items-center justify-content-center">
+                    <img
+                      src={`${imageUrl}/${item.image}`}
+                      alt={item.name}
+                      className="img-fluid rounded-start"
+                    />
+                  </div>
+                  <div className="col-md-8 d-flex align-items-center">
+                    <div className="card-body d-flex justify-content-between align-items-center w-100">
+                      <div>
+                        <h5 className="card-title">{item.name}</h5>
+                        <p className="card-text">Price: ${Number(item.cost).toFixed(2)}</p>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <button
+                          className="btn btn-sm btn-outline-secondary me-2"
+                          onClick={() => updateQuantity(index, -1)}
+                        >
+                          -
+                        </button>
+                        {item.quantity}
+                        <button
+                          className="btn btn-sm btn-outline-secondary ms-2"
+                          onClick={() => updateQuantity(index, 1)}
+                        >
+                          +
+                        </button>
+                        <button
+                          className="btn btn-sm btn-danger ms-3"
+                          onClick={() => removeItem(index)}
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3>{item.name}</h3>
-              <p>Price: ${Number(item.cost).toFixed(2)}</p>
-              <p>Quantity: {item.quantity}</p>
-              <div className="quantity-controls">
-                <button onClick={() => updateQuantity(index, -1)}>-</button>
-                <button onClick={() => updateQuantity(index, 1)}>+</button>
-              </div>
+            ))}
+            <div className="d-flex justify-content-end align-items-center mt-4">
+              <h5 className="mb-0 me-3">Subtotal: ${subtotal.toFixed(2)}</h5>
+              <Link to="/" className="btn btn-secondary me-3">Continue Shopping</Link>
+              <Link to="/checkout" className="btn btn-primary">Checkout</Link>
             </div>
-          ))}
-          <h3>Subtotal: ${subtotal.toFixed(2)}</h3>
-          <Link to="/checkout">
-            <button>Checkout</button>
-          </Link>
-        </>
+          </div>
+        </div>
       )}
-      <Link to="/">
-        <button>Continue Shopping</button>
-      </Link>
-    </>
+    </div>
   );
 }

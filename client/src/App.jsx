@@ -5,7 +5,6 @@ function App() {
   return (
     <>
       <Nav />
-      <hr></hr>
       <div>
         <Outlet />
       </div>

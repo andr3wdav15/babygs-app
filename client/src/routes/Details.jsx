@@ -3,16 +3,18 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Details() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [products, setProducts] = useState([]);
   const [cookies, setCookie] = useCookies(["cart"]);
   const apiUrl = import.meta.env.VITE_API_URL;
   const imageUrl = import.meta.env.VITE_IMAGE_URL;
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProduct = async () => {
       try {
         const response = await fetch(`${apiUrl}/products${id ? `/${id}` : ''}`);
         const data = await response.json();
@@ -21,13 +23,22 @@ export default function Details() {
         console.error("Error fetching products:", error);
       }
     };
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/products/all`);
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
 
-    fetchProducts();
-  }, [apiUrl]);
-
-  if (!product) {
-    return <div>Loading...</div>;
-  }
+    if (id) {
+      fetchProduct();
+    } else {
+      fetchProducts();
+    }
+  }, [apiUrl, id]);
 
   const handleAddToCart = () => {
     let currentCart = Array.isArray(cookies.cart) ? cookies.cart : [];
@@ -57,19 +68,75 @@ export default function Details() {
   };
 
   return (
-    <div>
-      <h2>{product.name}</h2>
-      <div className="product-image">
-        <img src={`${imageUrl}/${product.image_filename}`} alt={product.name} />
-      </div>
-      <p>{product.description}</p>
-      <p>Price: ${Number(product.cost).toFixed(2)}</p>
-      <button onClick={handleAddToCart}>Add to Cart</button>
-      <div className="product-options">
-        <Link to="/">
-          <button>Go Back</button>
-        </Link>
-      </div>
+    <div className="container mt-5">
+      {id && product ? (
+        <>
+          <div className="row justify-content-center">
+            <div className="col-md-6 text-center">
+              <img
+                src={`${imageUrl}/${product.image_filename}`}
+                className="img-fluid mb-4"
+                alt={product.name}
+              />
+            </div>
+          </div>
+          <div className="row justify-content-center">
+            <div className="col-md-6">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">{product.name}</h5>
+                  <p className="card-text">{product.description}</p>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <p className="card-text mb-0">${Number(product.cost).toFixed(2)}</p>
+                    <div>
+                      <button onClick={handleAddToCart} className="btn btn-success me-2">Add to Cart</button>
+                      <Link to="/" className="btn btn-secondary">Go Back</Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <h1 className="mb-5 text-center">Details</h1>
+          <div className="row justify-content-center">
+            <div className="col-md-8">
+              {products.map((product) => (
+                <div key={product.product_id} className="mb-4">
+                  <div className="row justify-content-center">
+                    <div className="col-md-8 text-center">
+                      <img
+                        src={`${imageUrl}/${product.image_filename}`}
+                        className="img-fluid mb-4"
+                        alt={product.name}
+                      />
+                    </div>
+                  </div>
+                  <div className="row justify-content-center">
+                    <div className="col-md-8">
+                      <div className="card">
+                        <div className="card-body">
+                          <h5 className="card-title">{product.name}</h5>
+                          <p className="card-text">{product.description}</p>
+                          <div className="d-flex justify-content-between align-items-center">
+                            <p className="card-text mb-0">${Number(product.cost).toFixed(2)}</p>
+                            <div>
+                              <button onClick={() => handleAddToCart(product)} className="btn btn-success me-2">Add to Cart</button>
+                              <Link to={`/details/${product.product_id}`} className="btn btn-primary">More Info</Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
