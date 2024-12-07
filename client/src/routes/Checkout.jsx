@@ -70,11 +70,13 @@ export default function Checkout() {
         },
         credentials: "include",
         body: JSON.stringify(cartData),
-      });r
+      });
 
       if (!response.ok) {
         return;
       }
+
+      const result = await response.json();
 
       removeCookie("cart", { path: "/" });
       navigate("/confirmation");
